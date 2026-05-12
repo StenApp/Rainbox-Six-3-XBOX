@@ -1,0 +1,54 @@
+# Ubisoft Xbox UMD Extractor
+# Format: Ubisoft UMOD variant — Rainbow Six 3 Xbox, Splinter Cell series
+# Files: xboxufiles.umd, xboxdynamic.umd (and dynamicxbox.umd in SC1)
+#
+# Reverse engineered by StenApp / Claude, May 2026
+#
+# Usage: quickbms ubisoft_xbox_umd.bms <file.umd> <output_folder>
+#
+# Note: offset=0 is valid in this format - Core.u in xboxufiles.umd and the
+# first .tpt in xboxdynamic.umd are genuinely stored at the beginning of
+# their respective files. Extraction condition is SIZE > 0, not OFFSET > 0.
+
+get FILESIZE asize
+
+# --- Footer (last 20 bytes) ---
+# [magic 4][toc_offset 4][toc_end 4][version 4][crc32 4]
+goto -20 SEEK_END
+idstring "\xa3\xc5\xe3\x9f"
+get TOC_OFFSET long
+get TOC_END    long
+get VERSION    long
+get CRC32      long
+
+goto TOC_OFFSET
+
+# --- File count: UE2 compact int (1 or 2 bytes) ---
+# bit7=sign, bit6=continuation, bits5..0=value (byte 0)
+# bit7=continuation, bits6..0=value (byte 1)
+get B0 byte
+math FILE_COUNT = B0
+math FILE_COUNT & 0x3f
+math CONT = B0
+math CONT & 0x40
+if CONT != 0
+    get B1 byte
+    math HIGH = B1
+    math HIGH & 0x7f
+    math HIGH << 6
+    math FILE_COUNT | HIGH
+endif
+
+# --- Extract entries ---
+for i = 0 < FILE_COUNT
+    get NAMESZ byte
+    getdstring NAME NAMESZ
+    get OFFSET long
+    get SIZE   long
+    get FLAGS  long
+    # offset=0 is valid (Core.u and first .tpt are at start of file)
+    # only skip truly empty entries
+    if SIZE > 0
+        log NAME OFFSET SIZE
+    endif
+next i
