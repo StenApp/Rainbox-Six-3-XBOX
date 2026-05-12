@@ -1,0 +1,22 @@
+- open input file System\xboxufiles.umd
+- open script ubisoft_xbox_umd_v2.bms
+- set output folder System\umdu
+  offset           filesize   filename
+--------------------------------------
+  0000000000000000 74175      System\Core.u
+  00000000000121c0 1319162    System\Engine.u
+  00000000001542c0 19076      System\Gameplay.u
+  0000000000158d50 20913      System\IpDrv.u
+  000000000015df10 118200     System\R61stWeapons.u
+  000000000017acd0 36842      System\R63rdWeapons.u
+  0000000000183cc0 75791      System\R6Abstract.u
+  00000000001964d0 59857      System\R6Characters.u
+  00000000001a4eb0 2427959    System\R6Engine.u
+  00000000003f5af0 418733     System\R6Game.u
+  000000000045bea0 255049     System\R6Gameplay.u
+  000000000049a2f0 229230     System\R6SFX.u
+  00000000004d2260 340928     System\R6Weapons.u
+  0000000000525620 3967       System\R6WeaponGadgets.u
+  00000000005265a0 4807       System\XBOXLive.u
+- 15 files found in 3 seconds
+  coverage file 0    99%   5405185    5405271    . offset 0000000000527a43
